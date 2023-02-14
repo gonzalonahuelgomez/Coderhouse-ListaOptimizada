@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Text, TouchableOpacity } from "react-native";
+import { addTask, toggleTask } from "../store/task.action";
 import { useDispatch, useSelector } from "react-redux";
 
 import AllTasks from "../components/all-tasks";
@@ -13,33 +14,20 @@ const Tab = createBottomTabNavigator();
 
 const TaskNavigator = () => {
   const [task, setTask] = useState("");
-  const [tasks, setTasks] = useState(TASK);
+  const todos = useSelector((state) => state.todos.tasks);
+  const dispatch = useDispatch();
 
   const onHandlerChange = (text) => {
     setTask(text);
   };
 
   const onHandlerSubmit = () => {
-    const idMax = Math.max(...tasks.map((task) => task.id));
-    setTasks([
-      ...tasks,
-      {
-        id: idMax + 1,
-        value: task,
-        isTaskFinished: false,
-      },
-    ]);
+    dispatch(addTask(task))
     setTask("");
   };
 
-  const onHandlerPress = (item) => {
-    setTasks(
-      tasks.map((task) =>
-        task.id === item.id
-          ? { ...task, isTaskFinished: !item.isTaskFinished }
-          : task
-      )
-    );
+  const onHandlerPress = (item) => {    
+    dispatch(toggleTask(item))    
   };
 
   const renderItem = ({ item }) => (
@@ -63,8 +51,16 @@ const TaskNavigator = () => {
 
   const keyExtractor = (item) => item.id.toString();
 
-  const filteredTask = (boolValue) => tasks.filter((task) => task.isTaskFinished === boolValue);
-
+  const filteredTask = (filter) => {
+    switch (filter) {
+      case 'SHOW_ALL':
+        return todos
+      case 'SHOW_COMPLETED':
+        return todos.filter(t => t.isTaskFinished)
+      case 'SHOW_ACTIVE':
+        return todos.filter(t => !t.isTaskFinished)
+    }
+  }
 
   return (
     <Tab.Navigator initialRouteName="All">
@@ -85,7 +81,7 @@ const TaskNavigator = () => {
             renderItem={renderItem}
             onHandlerSubmit={onHandlerSubmit}
             onHandlerChange={onHandlerChange}
-            filteredTask={tasks}
+            filteredTask={filteredTask('SHOW_ALL')}
             text={'There are no tasks'}
           />
         )}
@@ -103,8 +99,8 @@ const TaskNavigator = () => {
           <Tasks
           keyExtractor={keyExtractor}
           renderItem={renderItem}
-          filteredTask={filteredTask(false)}
-          text={'There are no tasks done'}
+          filteredTask={filteredTask('SHOW_ACTIVE')}
+          text={'There are no tasks to do'}
           />
         )}
       </Tab.Screen>
@@ -124,8 +120,8 @@ const TaskNavigator = () => {
           <Tasks
             keyExtractor={keyExtractor}
             renderItem={renderItem}
-            filteredTask={filteredTask(true)}
-            text={'There are no tasks to do'}
+            filteredTask={filteredTask('SHOW_COMPLETED')}
+            text={'There are no tasks done'}
           />
         )}
       </Tab.Screen>
