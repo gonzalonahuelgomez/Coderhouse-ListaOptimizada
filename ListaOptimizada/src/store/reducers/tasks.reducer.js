@@ -33,6 +33,14 @@ const tasks = (state = initialState, action) => {
         ...state,
         tasks: todos,
       };
+      // return {                    //or this
+      // ...state,
+      // tasks: state.tasks.map((task) =>
+      //   task.id === action.item.id
+      //     ? { ...task, isTaskFinished: !action.item.isTaskFinished }
+      //     : task
+      //  );
+      // };
     default:
       return state;
   }

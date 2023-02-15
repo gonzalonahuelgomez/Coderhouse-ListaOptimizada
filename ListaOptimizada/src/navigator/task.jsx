@@ -22,12 +22,12 @@ const TaskNavigator = () => {
   };
 
   const onHandlerSubmit = () => {
-    dispatch(addTask(task))
+    dispatch(addTask(task));
     setTask("");
   };
 
-  const onHandlerPress = (item) => {    
-    dispatch(toggleTask(item))    
+  const onHandlerPress = (item) => {
+    dispatch(toggleTask(item));
   };
 
   const renderItem = ({ item }) => (
@@ -53,14 +53,14 @@ const TaskNavigator = () => {
 
   const filteredTask = (filter) => {
     switch (filter) {
-      case 'SHOW_ALL':
-        return todos
-      case 'SHOW_COMPLETED':
-        return todos.filter(t => t.isTaskFinished)
-      case 'SHOW_ACTIVE':
-        return todos.filter(t => !t.isTaskFinished)
+      case "SHOW_ALL":
+        return todos;
+      case "SHOW_COMPLETED":
+        return todos.filter((t) => t.isTaskFinished);
+      case "SHOW_ACTIVE":
+        return todos.filter((t) => !t.isTaskFinished);
     }
-  }
+  };
 
   return (
     <Tab.Navigator initialRouteName="All">
@@ -81,8 +81,8 @@ const TaskNavigator = () => {
             renderItem={renderItem}
             onHandlerSubmit={onHandlerSubmit}
             onHandlerChange={onHandlerChange}
-            filteredTask={filteredTask('SHOW_ALL')}
-            text={'There are no tasks'}
+            filteredTask={filteredTask("SHOW_ALL")}
+            text={"There are no tasks"}
           />
         )}
       </Tab.Screen>
@@ -97,10 +97,10 @@ const TaskNavigator = () => {
       >
         {() => (
           <Tasks
-          keyExtractor={keyExtractor}
-          renderItem={renderItem}
-          filteredTask={filteredTask('SHOW_ACTIVE')}
-          text={'There are no tasks to do'}
+            keyExtractor={keyExtractor}
+            renderItem={renderItem}
+            filteredTask={filteredTask("SHOW_ACTIVE")}
+            text={"There are no tasks to do"}
           />
         )}
       </Tab.Screen>
@@ -120,8 +120,8 @@ const TaskNavigator = () => {
           <Tasks
             keyExtractor={keyExtractor}
             renderItem={renderItem}
-            filteredTask={filteredTask('SHOW_COMPLETED')}
-            text={'There are no tasks done'}
+            filteredTask={filteredTask("SHOW_COMPLETED")}
+            text={"There are no tasks done"}
           />
         )}
       </Tab.Screen>
